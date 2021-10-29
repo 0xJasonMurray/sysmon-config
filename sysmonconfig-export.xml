@@ -4,10 +4,10 @@
   Source project:	https://github.com/SwiftOnSecurity/sysmon-config
   Source license:	Creative Commons Attribution 4.0 | You may privatize, fork, edit, teach, publish, or deploy for commercial use - with attribution in the text.
 
-  Fork version:	<N/A>
-  Fork author:	<N/A>
-  Fork project:	<N/A>
-  Fork license:	<N/A>
+  Fork version:	1.0
+  Fork author:	Jason Murray
+  Fork project:	Sysmon in the Lab
+  Fork license:	None
 
   REQUIRED: Sysmon version 13 or higher (due to changes in syntax and bug-fixes)
 	https://docs.microsoft.com/en-us/sysinternals/downloads/sysmon
@@ -82,6 +82,14 @@
 		<!--DATA: UtcTime, ProcessGuid, ProcessID, Image, FileVersion, Description, Product, Company, CommandLine, CurrentDirectory, User, LogonGuid, LogonId, TerminalSessionId, IntegrityLevel, Hashes, ParentProcessGuid, ParentProcessId, ParentImage, ParentCommandLine, RuleName-->
 	<RuleGroup name="" groupRelation="or">
 		<ProcessCreate onmatch="exclude">
+			<!--SECTION: Exclude Splunk Forwarder Events-->
+			<Image condition="begin with">C:\Program Files\Splunk\bin\</Image>
+			<ParentImage condition="is">C:\Program Files\Splunk\bin\splunkd.exe</ParentImage>
+			<ParentImage condition="is">C:\Program Files\Splunk\bin\splunk.exe</ParentImage>
+			<Image condition="begin with">C:\Program Files\SplunkUniversalForwarder\bin\</Image>
+			<Image condition="begin with">C:\Program Files\SplunkUniversalForwarder\bin\</Image>
+			<ParentImage condition="is">C:\Program Files\SplunkUniversalForwarder\bin\splunkd.exe</ParentImage>
+			<ParentImage condition="is">C:\Program Files\SplunkUniversalForwarder\bin\splunk.exe</ParentImage>
 			<!--SECTION: Microsoft Windows-->
 			<CommandLine condition="begin with"> "C:\Windows\system32\wermgr.exe" "-queuereporting_svc" </CommandLine> <!--Windows:Windows error reporting/telemetry-->
 			<CommandLine condition="begin with">C:\Windows\system32\DllHost.exe /Processid</CommandLine> <!--Windows-->
